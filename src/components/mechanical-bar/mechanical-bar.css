@@ -1,0 +1,82 @@
+@layer components {
+.mechanical-bar {
+  --bar-color: #b9bfc4;
+  --bar-accent: #e6333e;
+  --bar-spacing: 10;
+  --bar-height: 32;
+  --bar-width: 2;
+  --bar-magnification: 2.4;
+  --bar-lens-radius: 72;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 560px;
+  height: 128px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  outline: none;
+}
+}
+
+.mechanical-bar__field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(to right, transparent, black 16%, black 84%, transparent);
+}
+
+.mechanical-bar__tooth {
+  --tooth-accent: 0%;
+  --tooth-color: color-mix(in srgb, var(--bar-accent) var(--tooth-accent), var(--bar-color));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 0.75px;
+  transform-origin: center;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--tooth-color) 48%, #17191b) 0%,
+    var(--tooth-color) 38%,
+    color-mix(in srgb, var(--tooth-color) 80%, white) 55%,
+    var(--tooth-color) 72%,
+    color-mix(in srgb, var(--tooth-color) 60%, #17191b) 100%);
+  box-shadow: 1px 0 1px #0008;
+}
+
+/* shadcn Buttons are the hit targets; the artwork is a separate, inert layer. */
+.mechanical-bar .mechanical-bar__hit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  outline: none;
+  transition: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mechanical-bar .mechanical-bar__hit:hover,
+.mechanical-bar .mechanical-bar__hit:active { background: transparent; }
+.mechanical-bar__hit--left { left: 0; }
+.mechanical-bar__hit--right { right: 0; }
+.mechanical-bar:has(:focus-visible)::after {
+  content: '';
+  position: absolute;
+  inset: auto 38% 10px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--bar-color) 45%, transparent), transparent);
+  pointer-events: none;
+}
+.mechanical-bar[data-disabled='true'] .mechanical-bar__field { opacity: 0.35; }
+.mechanical-bar[data-disabled='true'] .mechanical-bar__hit { cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mechanical-bar, .mechanical-bar * { animation: none; transition: none; }
+}

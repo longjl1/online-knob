@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: #e32935;
+  --color-input: #343434;
+  --color-ring: #c8c8c8;
+  --radius-md: 0.5rem;
+}
+
+:root {
+  font-family: system-ui, sans-serif;
+  color-scheme: dark;
+  --background: #101112;
+  --foreground: #e7e7e7;
+  --primary: #e7e7e7;
+  --primary-foreground: #101112;
+  --secondary: #252627;
+  --secondary-foreground: #e7e7e7;
+  --accent: #252627;
+  --accent-foreground: #e7e7e7;
+  background: var(--background);
+  color: var(--foreground);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { margin: 0; min-width: 240px; }
+* { box-sizing: border-box; }
+
+.preview {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(ellipse at center, #181a1c 0%, #111213 48%, #101112 80%);
+}
