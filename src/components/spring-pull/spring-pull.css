@@ -1,0 +1,16 @@
+.spring-pull { --pull-accent: #e6333e; position: relative; width: 100%; max-width: 350px; height: 145px; user-select: none; }
+.spring-pull__rail { position: absolute; top: 61px; left: 22px; right: 18px; height: 3px; border-radius: 2px; background: #cbd1d7; }
+.spring-pull__spring { position: absolute; inset: 0; width: 100%; height: 128px; pointer-events: none; overflow: visible; }
+.spring-pull__spring path { fill: none; stroke: #8a9299; stroke-width: 1.5; }
+.spring-pull__anchor { position: absolute; top: 59px; left: 19px; width: 10px; height: 10px; border-radius: 50%; background: #f5f6f7; border: 1.5px solid #9da7b1; }
+.spring-pull__threshold { position: absolute; top: 39px; width: 1px; height: 50px; background: linear-gradient(transparent,#e6333e77,transparent); pointer-events: none; }
+.spring-pull__threshold::before { content: ''; position: absolute; top: -7px; left: -2px; width: 5px; height: 5px; border-radius: 50%; background: #cc8e93; }
+.spring-pull__hint { position: absolute; top: 117px; left: 0; right: 0; text-align: center; color: #727a82; font: 10px/1.5 system-ui, sans-serif; letter-spacing: .1px; }
+.spring-pull .spring-pull__handle { position: absolute; top: 30px; left: 46px; width: 54px; height: 68px; padding: 0; border-radius: 5px; border: 1px solid #bdc3c9; cursor: grab; touch-action: none; background: #f5f6f7; box-shadow: 0 3px 5px #25303b1a; }
+.spring-pull .spring-pull__handle:hover { background: #f0f2f4; }
+.spring-pull .spring-pull__handle:active { cursor: grabbing; }
+.spring-pull__grip { position: absolute; left: 8px; top: 12px; bottom: 12px; width: 16px; background: repeating-linear-gradient(90deg,#b3bcc5 0 1px,transparent 1px 5px); border-radius: 2px; opacity: .8; }
+.spring-pull__arrow { position: absolute; right: 6px; top: 18px; color: #79838d; font: 24px/1 Arial,sans-serif; }
+.spring-pull[data-armed='true'] .spring-pull__hint { color: var(--pull-accent); }
+.spring-pull[data-armed='true'] .spring-pull__threshold::before { background: var(--pull-accent); box-shadow: 0 0 10px #e6333e66; }
+.spring-pull[data-armed='true'] .spring-pull__handle { border-color: var(--pull-accent); }

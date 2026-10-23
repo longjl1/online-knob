@@ -18,15 +18,15 @@
 
 :root {
   font-family: system-ui, sans-serif;
-  color-scheme: dark;
-  --background: #101112;
-  --foreground: #e7e7e7;
-  --primary: #e7e7e7;
-  --primary-foreground: #101112;
-  --secondary: #252627;
-  --secondary-foreground: #e7e7e7;
-  --accent: #252627;
-  --accent-foreground: #e7e7e7;
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #182027;
+  --primary: #182027;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f5f6;
+  --secondary-foreground: #182027;
+  --accent: #f3f5f6;
+  --accent-foreground: #182027;
   background: var(--background);
   color: var(--foreground);
   font-synthesis: none;
@@ -41,5 +41,5 @@ body { margin: 0; min-width: 240px; }
   display: grid;
   place-items: center;
   padding: 24px;
-  background: radial-gradient(ellipse at center, #181a1c 0%, #111213 48%, #101112 80%);
+  background: #ffffff;
 }

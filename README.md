@@ -1,122 +1,184 @@
-# Mechanical Bar
+# Mechanical UI
 
-A minimal, tactile-feeling control for React: infinitely scrolling metal teeth, a fixed magnifying lens, and synthesized mechanical clicks.
+Four independent React + TypeScript controls with simple mechanical forms, physical motion, and synthesized sound. The showcase uses a clean white panel, quiet gray surfaces, and small red accents.
 
-Built with **React**, **TypeScript**, **Tailwind CSS**, and **shadcn/ui**. Silver, charcoal, and a restrained red accent give it a camera-inspired finish. The preview contains only the bar.
+Built with React 19 and shadcn/ui Button. The library ships scoped CSS; consuming applications do not need Tailwind. The local preview uses Vite and Tailwind CSS.
 
-## Demo
+## Components
 
-![Mechanical Bar demo: single steps, continuous scrolling in both directions, and spring settling](docs/mechanical-bar-demo.gif)
+### Mechanical Bar
 
-Recorded from the running component. The loop demonstrates individual steps, sustained scrolling, direction changes, and settling into a detent. **GIFs are silent** — run the preview locally to hear the mechanical clicks.
+An infinite scale passing through a fixed magnifying lens. Click either half or focus the control and use **← / →**; hold to keep moving. Each actual detent crossing emits a step and a click, with rebound filtered out.
 
-## Features
+![Mechanical Bar: single steps, continuous travel, and direction changes](docs/mechanical-bar-demo.gif)
 
-- **Infinite travel:** scroll in either direction without endpoints or a growing DOM.
-- **Fixed magnification:** nearby teeth smoothly grow taller, thicker, and brighter as they pass through the center.
-- **Mechanical feedback:** a damped spring and one synthesized click per detent, without duplicate rebound clicks.
-- **Keyboard and touch:** use the arrow keys, hold to repeat, or click/tap either half.
-- **Accessible behavior:** real shadcn/ui buttons, focus feedback, reduced-motion support, and isolated keyboard handling.
-- **Small implementation:** native animation frames and Web Audio; no animation library, remote fonts, or audio assets.
+### Gear Wheel
 
-## Quick start
+A simple toothed dial. Drag vertically, scroll over it, or use the arrow keys. A quick drag coasts and settles into a detent; a click advances one tooth.
+
+![Gear Wheel: incremental rotation, dragging in both directions, and inertia](docs/gear-wheel-demo.gif)
+
+### Mechanical Flip
+
+A controlled split-flap counter. Only changed digits flip. Rapid updates finish the current transition and converge to the latest value. Supply `onStep` to enable side clicks and arrow keys, or omit it for a display-only counter.
+
+![Mechanical Flip: individual increments, rollover, and a reverse step](docs/mechanical-flip-demo.gif)
+
+### Spring Pull
+
+A spring-loaded handle with increasing resistance. Pull past the red marker and release to activate; shorter pulls return without activating. Hold **Space** to build tension, release to activate, or press **Enter** for direct keyboard activation. **Escape** cancels.
+
+![Spring Pull: a short cancelled pull, armed release, and spring return](docs/spring-pull-demo.gif)
+
+These GIFs are recordings of the running components at 25 FPS. **GIFs are silent**; run the preview to hear the detent, flap, and release sounds.
+
+## Run locally
 
 Requires Node.js 22.18+ or 24+, and npm.
 
 ```sh
+git clone https://github.com/longjl1/online-knob.git
+cd online-knob
 npm ci
 npm run dev
 ```
 
-Open the printed local URL. Use **← / →**, hold a direction to repeat, or click/tap the corresponding half of the bar. The preview focuses the bar automatically. There is no passive autoplay or movement.
+Open the local URL printed by Vite. The main page shows all four controls and a small sound toggle. Only focused controls handle keyboard input.
+
+For an isolated preview, add `?demo=bar`, `?demo=gear`, `?demo=flip`, or `?demo=spring`. Only the isolated bar preview autofocuses; embedded components do not take focus automatically.
+
+## Use the library
+
+The package name is `@longjl1/mechanical-ui`. It is distributed through this GitHub repository, not published to the npm registry.
+
+Build and pack locally:
 
 ```sh
-npm run build       # TypeScript check + production build in dist/
-npm run lint
-npm run test:unit   # spring, detents, reversal, and long-run rebasing
-npm run test:e2e    # Playwright, using locally installed Google Chrome
+npm run build:lib
+npm pack
+# In your React 19 application:
+npm install /path/to/longjl1-mechanical-ui-0.1.0.tgz
 ```
 
-For browser tests, install Google Chrome or change `channel: 'chrome'` in `playwright.config.ts` to your installed Playwright Chromium configuration. Tests start a local Vite server when needed. Screenshots are generated in `tests/artifacts/` (ignored by Git).
-
-## Reuse
-
-The public entry point is `src/components/mechanical-bar/index.ts`.
+Import the stylesheet once in your application entry point:
 
 ```tsx
-import { MechanicalBar } from '@/components/mechanical-bar'
+import { useState } from 'react'
+import {
+  MechanicalBar,
+  GearWheel,
+  MechanicalFlip,
+  SpringPull,
+} from '@longjl1/mechanical-ui'
+import '@longjl1/mechanical-ui/styles.css'
 
-export function ExposureControl() {
+export function Controls() {
+  const [value, setValue] = useState(42)
+  const step = (delta: -1 | 1) => setValue(v => v + delta)
+
   return (
-    <MechanicalBar
-      aria-label="Exposure adjustment"
-      onStep={(direction) => console.log(direction)}
-      sound
-      volume={0.22}
-    />
+    <>
+      <MechanicalBar aria-label="Fine adjustment" onStep={step} />
+      <GearWheel aria-label="Coarse adjustment" onStep={step} />
+      <MechanicalFlip value={value} digits={4} onStep={step} />
+      <SpringPull onTrigger={() => setValue(0)} />
+    </>
   )
 }
 ```
 
-Copy the `mechanical-bar` directory into another React/Tailwind/shadcn project, with its CSS. It imports `@/components/ui/button` and `@/lib/utils`; keep those aliases or adjust them. Add the official Button with `npx shadcn@latest add button` if it is missing. The component stylesheet is imported automatically. Tailwind supplies the Button classes and `sr-only` utility.
+Each component also has its own entry point:
 
-| Prop | Default | Meaning |
+```tsx
+import { MechanicalBar } from '@longjl1/mechanical-ui/mechanical-bar'
+import { GearWheel } from '@longjl1/mechanical-ui/gear-wheel'
+import { MechanicalFlip } from '@longjl1/mechanical-ui/mechanical-flip'
+import { SpringPull } from '@longjl1/mechanical-ui/spring-pull'
+```
+
+The components are independent: they do not need a provider, shared state, a global keyboard handler, or showcase styles. The stylesheet is scoped to the controls and does not reset the host page. All component prop types are exported.
+
+## API
+
+All four components accept:
+
+| Prop | Default | Description |
 | --- | --- | --- |
-| `onStep(delta)` | — | Actual tooth crossing: `-1` moves left, `1` moves right. Small rebound is filtered out. |
-| `sound` | `true` | Enable or mute synthesized clicks. |
-| `volume` | `0.22` | Master gain, clamped to `0–1`. |
-| `disabled` | `false` | Disable both hit targets, stop held input, mute, and dim. |
-| `className` | — | Additional classes; e.g. `max-w-[400px]`. |
-| `style` | — | Inline styles and component CSS variables. |
-| `aria-label` | Localized label | Name of the control; directional button names derive from it. The built-in label is Chinese; supply your application's label. |
-| `autoFocus` | `false` | Focus the left hit target when mounted. Only the preview opts in. |
+| `sound` | `true` | Enable synthesized mechanical feedback. |
+| `volume` | See below | Gain, clamped to `0–1`; `0` is silent. |
+| `disabled` | `false` | Disable input, cancel active interaction, mute, and dim. |
+| `className` | — | Additional CSS classes. |
+| `style` | — | Inline styles, including component CSS variables. |
+| `aria-label` | Component name | Accessible control name; supply a localized label for your application. The bar retains its original Chinese default. |
 
-The component represents an endless relative control, not a bounded slider. Bind `onStep` to your own value or domain limits. It only handles arrows while one of its buttons is focused; multiple instances do not register competing global keyboard shortcuts. Tab switches targets, and Enter/Space activates a target.
+Default volume: Bar `0.22`, Gear Wheel `0.18`, Mechanical Flip `0.16`, Spring Pull `0.22`.
+
+| Component | Additional props | Behavior |
+| --- | --- | --- |
+| `MechanicalBar` | `onStep?: (delta: -1 \| 1) => void`, `autoFocus?: boolean` | `-1` moves left, `1` moves right. A callback fires per actual tooth crossed. Autofocus defaults to `false`. |
+| `GearWheel` | `onStep?: (delta: -1 \| 1) => void` | `1` rotates clockwise, `-1` counterclockwise. Callbacks include inertia crossings. |
+| `MechanicalFlip` | `value: number`, `digits?: number`, `onStep?: (delta: -1 \| 1) => void` | Controlled value; defaults to four digits, supports one to six. Truncates fractions and wraps modulo `10 ** digits`. Non-finite values display zero. |
+| `SpringPull` | `onTrigger?: () => void`, `onPullChange?: (progress: number) => void`, `threshold?: number` | Threshold defaults to `0.72`, clamped to `0.25–0.95`. Triggers once on an armed release. Progress is `0–1` during input and returns to zero on release; it does not report the return animation. |
+
+Bar and Gear Wheel are relative controls, so the application owns any value or limits. Mechanical Flip displays the supplied value and never mutates it internally.
 
 ## Appearance
+
+Controls have transparent outer backgrounds and simple light gray surfaces. Customize them with CSS variables:
 
 ```tsx
 <MechanicalBar
   style={{
-    '--bar-color': '#b9bfc4',
+    '--bar-color': '#737d86',
     '--bar-accent': '#e6333e',
     '--bar-spacing': 10,
     '--bar-magnification': 2.4,
   }}
 />
+<GearWheel style={{ '--gear-accent': '#e6333e' }} />
+<MechanicalFlip
+  value={42}
+  style={{ '--flip-digit-width': '56px', '--flip-digit-height': '84px' }}
+/>
+<SpringPull style={{ '--pull-accent': '#e6333e' }} />
 ```
 
-| CSS variable | Default | Meaning |
-| --- | --- | --- |
-| `--bar-color` | `#b9bfc4` | Silver metal base color. |
-| `--bar-accent` | `#e6333e` | Color near the center. |
-| `--bar-spacing` | `10` | Tooth pitch in pixels; unitless, clamped to 4–40. |
-| `--bar-height` | `32` | Base tooth height in pixels; unitless. |
-| `--bar-width` | `2` | Base tooth width in pixels; unitless. |
-| `--bar-magnification` | `2.4` | Center height multiplier, clamped to 1–4. |
-| `--bar-lens-radius` | `72` | Gaussian lens radius in pixels; unitless. |
+The bar also exposes `--bar-height` (32), `--bar-width` (2), and `--bar-lens-radius` (72); these are unitless pixel values. Its default maximum width is 560px. Spacing is clamped to 4–40 and magnification to 1–4. If you increase the tooth height substantially, increase the component's container height too.
 
-Default dimensions are `width: 100%`, `max-width: 560px`, and `height: 128px`. If you substantially increase height or magnification, also increase container height using `style` or a Tailwind class. The component has a transparent background; the dark radial background belongs only to the preview.
+## Motion, audio, and accessibility
 
-## Behavior and lifecycle
+- Native animation frames drive detents, inertia, resistance, and spring return. The bar recycles visible teeth and rebases position; the wheel has a fixed set of teeth.
+- Real shadcn/ui buttons provide names, focus, keyboard activation, and disabled behavior. Decorative artwork is hidden from assistive technology. The flip counter announces its complete value.
+- `prefers-reduced-motion` removes bar travel, wheel coasting, flap rotation, and spring rebound. Static central magnification remains visible.
+- Window blur and hidden tabs cancel active drags and held input. Cancelled or interrupted spring pulls never activate.
+- Audio contexts are created or resumed after a user gesture. If audio is unavailable, controls continue silently. Display-only flip counters do not unlock audio on their own.
+- Unmounting cancels animation frames and timers, removes listeners and resize observers, and closes per-instance audio contexts. React Strict Mode is supported.
 
-- Movement and magnification share the same animated position. Only visible teeth plus a small buffer are rendered; position periodically rebases without changing the five-tooth rhythm.
-- A tap advances one tooth. Holding waits 280 ms and then advances every 72 ms. Releasing a hold snaps to the nearest tooth. Changing focus, window blur, and a hidden document cancel held input.
-- Each actual detent crossing calls `onStep` and plays one click. The spring uses hysteresis to avoid double callbacks and sounds during rebound.
-- Audio is created/resumed only within a user gesture. If playback is unavailable or denied, motion and callbacks continue silently. `sound={false}` or `volume={0}` also works without initializing audio.
-- Reduced motion removes travel and rebound while preserving the fixed lens profile. The bar keeps real buttons, accessible names, hidden instructions, and a subtle keyboard-focus underline.
-- Unmounting cancels timers and animation frames, disconnects the resize observer, removes listeners, and closes the instance's audio context. React Strict Mode is supported.
-
-The test-only harness under `tests/` is not included in the production build. Browser verification covers Chrome; Safari and Firefox have not been manually verified.
-
-## Regenerate the GIF
-
-The committed GIF is a capture of the actual component, not a separate animation mockup. With the development server running and Google Chrome installed:
+## Development and verification
 
 ```sh
-node scripts/capture-demo.mjs
+npm run typecheck
+npm run lint
+npm run build        # demo → dist/, library + declarations → dist-lib/
+npm run test:unit    # detents, numerical rebasing, spring physics, digit formatting
+npm run test:e2e     # browser behavior, touch, reduced motion, audio, cleanup
+npm run test:package # packed consumer types, build, and browser rendering without Tailwind
+```
+
+Browser checks use locally installed Google Chrome via Playwright. Install Chrome or adjust `playwright.config.ts` and the capture/verification scripts for your installed browser. Firefox and Safari have not been verified.
+
+The public source entry is `src/index.ts`. Individual implementations live in `src/components/{mechanical-bar,gear-wheel,mechanical-flip,spring-pull}`. Shared Web Audio and lifecycle hooks live in `src/lib`. Test harnesses, screenshots, and raw recording frames are excluded from production output.
+
+## Regenerate demos
+
+With the development server running and Chrome installed:
+
+```sh
+node scripts/capture-demo.mjs       # all four controls
 python3 -m pip install Pillow
 python3 scripts/build-demo-gif.py
 ```
 
-The capture uses deterministic browser time at 25 FPS. Raw frames stay in the ignored `tests/artifacts/gif-frames/` directory; the optimized loop is written to `docs/mechanical-bar-demo.gif`. Set `DEMO_URL` when the development server uses a different address.
+Pass `bar`, `gear`, `flip`, or `spring` to both scripts to regenerate one demo. `DEMO_URL` overrides the server address. Capture advances browser motion and native flap animations together at 25 FPS. Raw frames remain under the ignored `tests/artifacts/gif-frames/` directory; encoded GIFs are written to `docs/`.
+
+The restrained white presentation takes direction from [UI Components by Mik Skuza](https://dribbble.com/shots/25473428-UI-Components). All controls and demo assets in this repository are implemented and recorded locally.

@@ -2,6 +2,9 @@ export type StepDirection = -1 | 1
 
 /** Position is measured in teeth, rather than pixels, so resizing is seamless. */
 export class DetentMotion {
+  private rebasePeriod: number
+
+  constructor(rebasePeriod = 5) { this.rebasePeriod = rebasePeriod }
   position = 0
   velocity = 0
   target = 0
@@ -66,7 +69,7 @@ export class DetentMotion {
 
     // A multiple of the five-tooth visual rhythm preserves the exact appearance.
     if (Math.abs(this.position) > 10_000) {
-      const shift = Math.trunc(this.position / 5) * 5
+      const shift = Math.trunc(this.position / this.rebasePeriod) * this.rebasePeriod
       this.position -= shift
       this.target -= shift
       this.detent -= shift

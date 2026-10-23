@@ -35,13 +35,7 @@
   left: 50%;
   border-radius: 0.75px;
   transform-origin: center;
-  background: linear-gradient(90deg,
-    color-mix(in srgb, var(--tooth-color) 48%, #17191b) 0%,
-    var(--tooth-color) 38%,
-    color-mix(in srgb, var(--tooth-color) 80%, white) 55%,
-    var(--tooth-color) 72%,
-    color-mix(in srgb, var(--tooth-color) 60%, #17191b) 100%);
-  box-shadow: 1px 0 1px #0008;
+  background: var(--tooth-color);
 }
 
 /* shadcn Buttons are the hit targets; the artwork is a separate, inert layer. */
@@ -64,6 +58,7 @@
 
 .mechanical-bar .mechanical-bar__hit:hover,
 .mechanical-bar .mechanical-bar__hit:active { background: transparent; }
+.mechanical-bar .mechanical-bar__hit:focus-visible { outline: none; }
 .mechanical-bar__hit--left { left: 0; }
 .mechanical-bar__hit--right { right: 0; }
 .mechanical-bar:has(:focus-visible)::after {

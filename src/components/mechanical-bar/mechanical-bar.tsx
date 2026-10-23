@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { MechanicalAudio } from './audio'
 import { DetentMotion, lensWeight, wrap, type StepDirection } from './motion'
 import './mechanical-bar.css'
+import '../../styles/shared.css'
 
 export interface MechanicalBarProps {
   /** Fires on an actual tooth crossing: -1 is left, +1 is right. */
@@ -236,6 +237,7 @@ export function MechanicalBar({
   return (
     <div
       ref={rootRef}
+      data-mechanical-ui="bar"
       role="group"
       aria-label={label}
       aria-describedby={helpId}

@@ -1,0 +1,15 @@
+/* Scoped foundations: the distributed library never resets the host page. */
+[data-mechanical-ui], [data-mechanical-ui] * { box-sizing: border-box; }
+[data-mechanical-ui] button { font: inherit; -webkit-tap-highlight-color: transparent; }
+[data-mechanical-ui] .sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+[data-mechanical-ui] button:disabled { pointer-events: none; }
+[data-mechanical-ui] button:focus-visible { outline: 1px solid #b9bfc480; outline-offset: 6px; }
+[data-mechanical-ui]:not(.mechanical-bar)[data-disabled='true'] { opacity: .35; }
+@media (prefers-reduced-motion: reduce) {
+  [data-mechanical-ui] *, [data-mechanical-ui] *::before, [data-mechanical-ui] *::after {
+    animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,10 @@
+.gear-wheel { --gear-accent: #e6333e; position: relative; width: 208px; height: 224px; flex-shrink: 0; }
+.gear-wheel .gear-wheel__control { position: absolute; inset: 16px 8px 0; width: 192px; height: 192px; border: 0; padding: 0; border-radius: 50%; background: transparent; touch-action: none; cursor: grab; user-select: none; box-shadow: none; }
+.gear-wheel .gear-wheel__control:active { cursor: grabbing; }
+.gear-wheel .gear-wheel__control:hover { background: transparent; }
+.gear-wheel__index { position: absolute; top: 0; left: 102px; width: 3px; height: 10px; border-radius: 2px; background: var(--gear-accent);  }
+.gear-wheel__rotor { display: block; position: absolute; inset: 0; border-radius: 50%; }
+.gear-wheel__tooth { position: absolute; left: 94px; top: 91px; width: 4px; height: 10px; border-radius: 1px; background: #bbc1c7; }
+.gear-wheel__rim { position: absolute; inset: 12px; border-radius: 50%; border: 1px solid #bfc5cb; background: #f5f6f7; box-shadow: 0 3px 5px #25303b1a; }
+.gear-wheel__mark { position: absolute; top: 93px; left: 95px; width: 1px; height: 6px; background: #656d76; opacity: .65; }
+.gear-wheel__witness { position: absolute; top: 26px; left: 94.5px; width: 3px; height: 13px; background: var(--gear-accent); border-radius: 1px; }

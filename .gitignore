@@ -27,3 +27,6 @@ dist-ssr
 test-results/
 playwright-report/
 tests/artifacts/
+
+dist-lib/
+*.tgz

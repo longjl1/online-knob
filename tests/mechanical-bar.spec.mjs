@@ -26,7 +26,7 @@ async function harness(page) {
 test('preview contains only the bar, with a continuous magnified center', async ({ page }) => {
   const errors = []
   page.on('pageerror', error => errors.push(error.message))
-  await page.goto('/')
+  await page.goto('/?demo=bar')
   await expect(page.getByRole('heading')).toHaveCount(0)
   await expect(page.locator('main')).toHaveText('使用左右方向键移动刻度，长按可连续移动；也可点击左半或右半。')
   const teeth = await page.locator('.mechanical-bar__tooth').evaluateAll(nodes => nodes.map(node => {
@@ -140,7 +140,7 @@ test('reduced motion, muted initialization, and narrow touch layout', async ({ p
   expect(await first(page).locator('.mechanical-bar__tooth').evaluateAll(nodes => nodes.map(n => n.style.transform))).toEqual(transforms)
   expect(await page.evaluate(() => window.audioStats.created)).toBe(0)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320)
-  await page.goto('/')
+  await page.goto('/?demo=bar')
   await page.screenshot({ path: 'tests/artifacts/mobile.png' })
 })
 
